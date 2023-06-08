@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import successIcon from '../assets/success.svg';
 import errorIcon from '../assets/error.svg';
 
@@ -6,6 +6,8 @@ import './notification.css';
 
 const Notification = ({status, label, text, setShow}) => {
   const [progressState, setProgressState] = useState(100);
+  let refProgressStateTimer = useRef(null);
+  let refShowTimer = useRef(null);
 
   const createPausableTimer = (cb, timeout, ...args) => {
     let lastStart = Date.now();
@@ -24,34 +26,47 @@ const Notification = ({status, label, text, setShow}) => {
         lastStart = Date.now();
         paused = false;
         timerID = setTimeout(cb, remainingTime, ...args);
+      },
+      clear() {
+        clearTimeout(timerID);
       }
     };
   };
 
-  let progressStateTimer = useMemo(() => createPausableTimer(
+  let progressStateTimer = useCallback((progressState) => createPausableTimer(
     function tick(progressState) {
-        setProgressState(progressState - 5.5);
-        progressStateTimer = createPausableTimer(tick, 150, progressState - 5.5);
+      setProgressState(progressState - 5.5);
+      refProgressStateTimer.current = createPausableTimer(tick, 150, progressState - 5.5);
     },
     150,
     progressState
   ), []);
 
-  const showTimer = useMemo(() => createPausableTimer(
+  const showTimer = useCallback(() => createPausableTimer(
     () => {
         setShow(false);
       },
     3000,
   ), []);
 
+  useEffect( () => {
+    refShowTimer.current = showTimer();
+    refProgressStateTimer.current = progressStateTimer(progressState);
+
+    return function cleanup () {
+      refShowTimer?.current.clear();
+      refProgressStateTimer.current.clear();
+    }
+  }, [])
+
   const handleNotificationMouseOver = useCallback(() => {
-    showTimer.pause();
-    progressStateTimer.pause()
+    refShowTimer?.current.pause();
+    refProgressStateTimer?.current.pause()
   }, [])
 
   const handleNotificationMouseOut = useCallback(() => {
-    showTimer.resume();
-    progressStateTimer.resume()
+    refShowTimer?.current.resume();
+    refProgressStateTimer.current.resume()
   }, [])
 
   return (
