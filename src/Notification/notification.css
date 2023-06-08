@@ -1,0 +1,79 @@
+.notification{
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    width: calc(400px - 48px);
+    height: calc(100px - 48px);
+
+    margin: 20px;
+    padding: 24px;
+
+    border-radius: 8px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
+
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    grid-template-areas:
+        "icon title"
+        "icon message"
+        ". progress";
+    grid-column-gap: 12px;
+}
+
+.notification__icon {
+    grid-area: icon;
+    align-self: center;
+}
+
+.notification__title {
+    grid-area: title;
+    align-self: flex-end;
+
+    margin: 0;
+
+    font-family: 'HelveticaNeueCyr', sans-serif;
+    font-style: normal;
+    font-weight: 550;
+    font-size: 16px;
+    line-height: 22px;
+    letter-spacing: -0.02em;
+
+    color: #343841;
+}
+
+.notification__message {
+    grid-area: message;
+    align-self: flex-start;
+
+    margin: 0;
+
+    font-family: 'HelveticaNeueCyr', sans-serif;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 12px;
+    line-height: 17px;
+    letter-spacing: -0.02em;
+
+    color: #7B7C7D;
+}
+
+.notification__progress--bg {
+    grid-area: progress;
+
+    width: 100%;
+    height: 6px;
+
+    background: #C7C9C8;
+    border-radius: 3px;
+}
+
+.notification__progress--bar {
+    height: 100%;
+
+    background: #4B4E51;
+    border-radius: 3px;
+
+    transition-property: width;
+    transition-duration: 0.3s;
+}
