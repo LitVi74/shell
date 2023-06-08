@@ -55,7 +55,7 @@ const Notification = ({status, label, text, setShow}) => {
 
     return function cleanup () {
       refShowTimer?.current.clear();
-      refProgressStateTimer.current.clear();
+      refProgressStateTimer?.current.clear();
     }
   }, [])
 
@@ -66,7 +66,7 @@ const Notification = ({status, label, text, setShow}) => {
 
   const handleNotificationMouseOut = useCallback(() => {
     refShowTimer?.current.resume();
-    refProgressStateTimer.current.resume()
+    refProgressStateTimer?.current.resume()
   }, [])
 
   return (
